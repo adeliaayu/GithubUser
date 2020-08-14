@@ -44,7 +44,7 @@
         android:layout_marginTop="5dp"
         android:layout_toEndOf="@id/itemUser_img_avatar"
         android:text="@string/company"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:drawableStart="@drawable/ic_outline_business_24"
         android:drawablePadding="8dp"
         android:drawableTint="@color/colorPrimary"/>
@@ -58,7 +58,7 @@
         android:layout_marginTop="5dp"
         android:layout_toEndOf="@id/itemUser_img_avatar"
         android:text="@string/location"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:drawableStart="@drawable/ic_outline_place_24"
         android:drawablePadding="8dp"
         android:drawableTint="@color/colorPrimary"/>

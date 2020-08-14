@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GithubUser</string>
+    <string name="app_name">Github User</string>
     <string name="name_user">Nama User</string>
     <string name="repository">Repository</string>
     <string name="followers">Followers</string>
@@ -8,6 +8,7 @@
     <string name="username">Username</string>
     <string name="company">Company</string>
     <string name="location">Location</string>
+    <string name="_0">0</string>
 
     <string-array name="username">
         <item>JakeWharton</item>

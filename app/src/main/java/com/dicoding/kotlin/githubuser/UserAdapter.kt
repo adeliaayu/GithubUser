@@ -32,11 +32,11 @@ class UserAdapter internal constructor(private val context: Context) : BaseAdapt
     inner class ViewHolder constructor(private val view: View) {
         fun bind(user: User) {
             with(view) {
-                img_avatar.setImageResource(user.avatar)
-                txt_name.text = user.name
-                txt_username.text = user.username
-                txt_company.text = user.company
-                txt_location.text = user.location
+                itemUser_img_avatar.setImageResource(user.avatar)
+                itemUser_txt_name.text = user.name
+                itemUser_txt_username.text = user.username
+                itemUser_txt_company.text = user.company
+                itemUser_txt_location.text = user.location
             }
         }
     }

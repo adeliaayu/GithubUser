@@ -1,5 +1,6 @@
 package com.dicoding.kotlin.githubuser
 
+import android.content.Intent
 import android.content.res.TypedArray
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -28,14 +29,19 @@ class MainActivity : AppCompatActivity() {
 
         adapter = UserAdapter(this)
 
-        lv_listUser.adapter = adapter
+        main_lv_listUser.adapter = adapter
 
         prepare()
 
         addItem()
 
-        lv_listUser.onItemClickListener = AdapterView.OnItemClickListener{ _, _, position, _ ->
+        main_lv_listUser.onItemClickListener = AdapterView.OnItemClickListener{ _, _, position, _ ->
             Toast.makeText(this@MainActivity, users[position].name, Toast.LENGTH_SHORT).show()
+
+            val user_detail = users[position]
+            val moveToDetailUser = Intent(this@MainActivity, DetailUser::class.java)
+            moveToDetailUser.putExtra(DetailUser.EXTRA_USER, user_detail)
+            startActivity(moveToDetailUser)
         }
     }
 
