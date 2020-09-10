@@ -1,44 +1,45 @@
 package com.dicoding.kotlin.githubuser
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_user.view.*
 
-class UserAdapter internal constructor(private val context: Context) : BaseAdapter() {
+class UserAdapter(private val listUser : ArrayList<User>) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
-    internal var users = arrayListOf<User>()
+    private var onItemClickCallback: OnItemClickCallback? = null
 
-    override fun getItem(i: Int): Any = users[i]
-
-    override fun getItemId(i: Int): Long = i.toLong()
-
-    override fun getCount(): Int = users.size
-
-    override fun getView(position: Int, view: View?, viewGroup: ViewGroup): View {
-        var itemView = view
-        if(itemView == null) {
-            itemView = LayoutInflater.from(context).inflate(R.layout.item_user, viewGroup, false)
-        }
-
-        val viewHolder = ViewHolder(itemView as View)
-        val user = getItem(position) as User
-        viewHolder.bind(user)
-        return itemView
+    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
+        this.onItemClickCallback = onItemClickCallback
     }
 
-    inner class ViewHolder constructor(private val view: View) {
+    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): UserViewHolder {
+        val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.item_user, viewGroup, false)
+        return UserViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
+        holder.bind(listUser[position])
+    }
+
+    override fun getItemCount(): Int = listUser.size
+
+    inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(user: User) {
-            with(view) {
+            with(itemView) {
                 itemUser_img_avatar.setImageResource(user.avatar)
                 itemUser_txt_name.text = user.name
                 itemUser_txt_username.text = user.username
                 itemUser_txt_company.text = user.company
                 itemUser_txt_location.text = user.location
+
+                itemView.setOnClickListener { onItemClickCallback?.onItemClicked(user) }
             }
         }
     }
 
+    interface OnItemClickCallback {
+        fun onItemClicked(data: User)
+    }
 }

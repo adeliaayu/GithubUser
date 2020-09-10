@@ -1,62 +1,36 @@
 package com.dicoding.kotlin.githubuser
 
 import android.content.Intent
-import android.content.res.TypedArray
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.AdapterView
-import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var adapter: UserAdapter
-
-    private lateinit var dataAvatar: TypedArray
-    private lateinit var dataName: Array<String>
-    private lateinit var dataRepository: Array<String>
-    private lateinit var dataFollowing: Array<String>
-    private lateinit var dataFollower: Array<String>
-    private lateinit var dataUsername: Array<String>
-    private lateinit var dataCompany: Array<String>
-    private lateinit var dataLocation: Array<String>
-
-    private var users = arrayListOf<User>()
+    private val list = ArrayList<User>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        adapter = UserAdapter(this)
+        rv_users.setHasFixedSize(true)
 
-        main_lv_listUser.adapter = adapter
-
-        prepare()
-
-        addItem()
-
-        main_lv_listUser.onItemClickListener = AdapterView.OnItemClickListener{ _, _, position, _ ->
-            Toast.makeText(this@MainActivity, users[position].name, Toast.LENGTH_SHORT).show()
-
-            val user_detail = users[position]
-            val moveToDetailUser = Intent(this@MainActivity, DetailUser::class.java)
-            moveToDetailUser.putExtra(DetailUser.EXTRA_USER, user_detail)
-            startActivity(moveToDetailUser)
-        }
+        list.addAll(getListUser())
+        showRecyclerList()
     }
 
-    private fun prepare() {
-        dataAvatar = resources.obtainTypedArray(R.array.avatar)
-        dataName = resources.getStringArray(R.array.name)
-        dataRepository = resources.getStringArray(R.array.repository)
-        dataFollowing = resources.getStringArray(R.array.following)
-        dataFollower = resources.getStringArray(R.array.followers)
-        dataUsername = resources.getStringArray(R.array.username)
-        dataCompany = resources.getStringArray(R.array.company)
-        dataLocation = resources.getStringArray(R.array.location)
-    }
+    private fun getListUser(): ArrayList<User> {
+        val dataAvatar = resources.obtainTypedArray(R.array.avatar)
+        val dataName = resources.getStringArray(R.array.name)
+        val dataRepository = resources.getStringArray(R.array.repository)
+        val dataFollowing = resources.getStringArray(R.array.following)
+        val dataFollower = resources.getStringArray(R.array.followers)
+        val dataUsername = resources.getStringArray(R.array.username)
+        val dataCompany = resources.getStringArray(R.array.company)
+        val dataLocation = resources.getStringArray(R.array.location)
 
-    private fun addItem() {
+        val listUser = ArrayList<User>()
         for (position in dataName.indices) {
             val user = User(
                 avatar = dataAvatar.getResourceId(position, -1),
@@ -68,8 +42,23 @@ class MainActivity : AppCompatActivity() {
                 company = dataCompany[position],
                 location = dataLocation[position]
             )
-            users.add(user)
+            listUser.add(user)
         }
-        adapter.users = users
+        return listUser
     }
+
+    private fun showRecyclerList() {
+        rv_users.layoutManager = LinearLayoutManager(this)
+        val userAdapter = UserAdapter(list)
+        rv_users.adapter = userAdapter
+
+        userAdapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback{
+            override fun onItemClicked(data: User) {
+                val moveToDetailUser = Intent(this@MainActivity, DetailUser::class.java)
+                moveToDetailUser.putExtra(DetailUser.EXTRA_USER, data)
+                startActivity(moveToDetailUser)
+            }
+        })
+    }
+
 }

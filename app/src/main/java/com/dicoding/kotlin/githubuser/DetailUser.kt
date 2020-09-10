@@ -3,7 +3,6 @@ package com.dicoding.kotlin.githubuser
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_detail_user.*
-import kotlinx.android.synthetic.main.item_user.view.*
 
 class DetailUser : AppCompatActivity() {
 
