@@ -31,8 +31,6 @@ class UserAdapter(private val listUser : ArrayList<User>) : RecyclerView.Adapter
                 itemUser_img_avatar.setImageResource(user.avatar)
                 itemUser_txt_name.text = user.name
                 itemUser_txt_username.text = user.username
-                itemUser_txt_company.text = user.company
-                itemUser_txt_location.text = user.location
 
                 itemView.setOnClickListener { onItemClickCallback?.onItemClicked(user) }
             }

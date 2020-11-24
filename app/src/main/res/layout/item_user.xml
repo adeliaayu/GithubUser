@@ -7,10 +7,10 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/itemUser_img_avatar"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,35 +43,5 @@
         android:textStyle="italic"
         app:layout_constraintStart_toEndOf="@+id/itemUser_img_avatar"
         app:layout_constraintTop_toBottomOf="@+id/itemUser_txt_name" />
-
-    <TextView
-        android:id="@+id/itemUser_txt_company"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/itemUser_txt_username"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_toEndOf="@id/itemUser_img_avatar"
-        android:drawablePadding="8dp"
-        android:text="@string/company"
-        android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/itemUser_img_avatar"
-        app:layout_constraintTop_toBottomOf="@+id/itemUser_txt_username"
-        app:drawableStartCompat="@drawable/ic_outline_business_24" />
-
-    <TextView
-        android:id="@+id/itemUser_txt_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/itemUser_txt_company"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_toEndOf="@id/itemUser_img_avatar"
-        android:drawablePadding="8dp"
-        android:text="@string/location"
-        android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/itemUser_img_avatar"
-        app:layout_constraintTop_toBottomOf="@+id/itemUser_txt_company"
-        app:drawableStartCompat="@drawable/ic_outline_place_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

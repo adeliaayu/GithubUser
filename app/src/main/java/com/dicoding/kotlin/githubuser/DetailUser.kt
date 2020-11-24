@@ -22,9 +22,9 @@ class DetailUser : AppCompatActivity() {
         detailUser_txt_company.text = userDetails.company
         detailUser_txt_location.text = userDetails.location
         detailUser_txt_repository.text = userDetails.repository.toString()
-        detailUser_txt_follower.text = userDetails.follower.toString()
+        detailUser_txt_follower.text = userDetails.followers.toString()
         detailUser_txt_following.text = userDetails.following.toString()
 
-        supportActionBar?.setTitle("Detail User")
+        supportActionBar?.setTitle("User Detail")
     }
 }
