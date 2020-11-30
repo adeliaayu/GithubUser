@@ -2,7 +2,7 @@ package com.dicoding.kotlin.githubuser.model
 
 import com.google.gson.annotations.SerializedName
 
-data class ListUsers (
+data class ListUsersData (
     @SerializedName("login")
     val username : String,
     val id : Int,

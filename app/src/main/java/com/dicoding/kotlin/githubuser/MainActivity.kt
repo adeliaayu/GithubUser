@@ -3,17 +3,21 @@ package com.dicoding.kotlin.githubuser
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.View
+import android.widget.SearchView
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.dicoding.kotlin.githubuser.model.ListUsers
+import com.dicoding.kotlin.githubuser.data.ListUsers
+import com.dicoding.kotlin.githubuser.data.SearchedUsers
+import com.dicoding.kotlin.githubuser.model.ListUsersData
 import com.dicoding.kotlin.githubuser.repository.Repository
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val list = ArrayList<User>()
+    private var list = ArrayList<ListUsers>()
 
     private lateinit var viewModel: MainViewModel
 
@@ -27,64 +31,68 @@ class MainActivity : AppCompatActivity() {
         val viewModelFactory = MainViewModelFactory(repository)
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
-        viewModel.getListUsers()
-        viewModel.myResponseListUsers.observe(this, Observer { response ->
+        viewModel.getListUsersData()
+        viewModel.myResponseListUsersData.observe(this, Observer { response ->
             if (response.isSuccessful) {
-                response.body()?.forEach {
-                    Log.d("Response", it.username)
-                    Log.d("Response", it.avatar)
+                response.body()?.let {
+                    setData(it)
+                    showRecyclerList()
+                    main_progressBar.visibility = View.INVISIBLE
+                    rv_users.visibility = View.VISIBLE
                 }
             }
         })
 
-        list.addAll(getListUser())
-        showRecyclerList()
+        main_searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                main_progressBar.visibility = View.VISIBLE
+                rv_users.visibility = View.INVISIBLE
+                viewModel.getSearchResult(query)
+                viewModel.myResponseSearchResult.observe(this@MainActivity, Observer { response ->
+                    if (response.isSuccessful) {
+                        response.body()?.let {
+                            list.clear()
+                            setDataSearchUsers(it)
+                            showRecyclerList()
+                            main_progressBar.visibility = View.INVISIBLE
+                            rv_users.visibility = View.VISIBLE
+                            if (list.isEmpty()) Toast.makeText(this@MainActivity, "No Match Found", Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        Toast.makeText(this@MainActivity, "Connection Failed", Toast.LENGTH_SHORT).show()
+                    }
+                })
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                return false
+            }
+        })
     }
 
-//    private fun getListUser2(): ArrayList<ListUsers> {
-//        val repository = Repository()
-//        val viewModelFactory = MainViewModelFactory(repository)
-//
-//        viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
-//        viewModel.getListUsers()
-//        viewModel.myResponseListUsers.observe(this, Observer { response ->
-//            if (response.isSuccessful) {
-//                response.body()?.forEach {
-//
-//                }
-//            }
-//        })
-//
-//        val listUser = ArrayList<ListUsers>()
-//        for (position in )
-//        return listUser
-//    }
-
-    private fun getListUser(): ArrayList<User> {
-        val dataAvatar = resources.obtainTypedArray(R.array.avatar)
-        val dataName = resources.getStringArray(R.array.name)
-        val dataRepository = resources.getStringArray(R.array.repository)
-        val dataFollowing = resources.getStringArray(R.array.following)
-        val dataFollower = resources.getStringArray(R.array.followers)
-        val dataUsername = resources.getStringArray(R.array.username)
-        val dataCompany = resources.getStringArray(R.array.company)
-        val dataLocation = resources.getStringArray(R.array.location)
-
-        val listUser = ArrayList<User>()
-        for (position in dataName.indices) {
-            val user = User(
-                avatar = dataAvatar.getResourceId(position, -1),
-                name = dataName[position],
-                repository = dataRepository[position].toInt(),
-                following = dataFollowing[position].toInt(),
-                followers = dataFollower[position].toInt(),
-                username = dataUsername[position],
-                company = dataCompany[position],
-                location = dataLocation[position]
+    private fun setDataSearchUsers(newList: SearchedUsers) {
+        val listUser = ArrayList<ListUsers>()
+        for (position in newList.items.indices) {
+            val user = ListUsers(
+                avatar = newList.items[position].avatar_url,
+                username = newList.items[position].username
             )
             listUser.add(user)
         }
-        return listUser
+        list.addAll(listUser)
+    }
+
+    private fun setData(newList: List<ListUsersData>) {
+        val listUser = ArrayList<ListUsers>()
+        for (position in newList.indices) {
+            val user = ListUsers(
+                avatar = newList[position].avatar,
+                username = newList[position].username
+            )
+            listUser.add(user)
+        }
+        list.addAll(listUser)
     }
 
     private fun showRecyclerList() {
@@ -92,8 +100,8 @@ class MainActivity : AppCompatActivity() {
         val userAdapter = UserAdapter(list)
         rv_users.adapter = userAdapter
 
-        userAdapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback{
-            override fun onItemClicked(data: User) {
+        userAdapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
+            override fun onItemClicked(data: ListUsers) {
                 val moveToDetailUser = Intent(this@MainActivity, DetailUser::class.java)
                 moveToDetailUser.putExtra(DetailUser.EXTRA_USER, data)
                 startActivity(moveToDetailUser)

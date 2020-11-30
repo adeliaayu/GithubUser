@@ -3,7 +3,8 @@ package com.dicoding.kotlin.githubuser
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dicoding.kotlin.githubuser.model.ListUsers
+import com.dicoding.kotlin.githubuser.data.SearchedUsers
+import com.dicoding.kotlin.githubuser.model.ListUsersData
 import com.dicoding.kotlin.githubuser.model.UserDetailsData
 import com.dicoding.kotlin.githubuser.repository.Repository
 import kotlinx.coroutines.launch
@@ -11,19 +12,27 @@ import retrofit2.Response
 
 class MainViewModel(private val repository: Repository): ViewModel() {
 
+    val myResponseListUsersData: MutableLiveData<Response<List<ListUsersData>>> = MutableLiveData()
+    val myResponseSearchResult: MutableLiveData<Response<SearchedUsers>> = MutableLiveData()
     val myResponseUserDetailsData: MutableLiveData<Response<UserDetailsData>>? = MutableLiveData()
-    val myResponseListUsers: MutableLiveData<Response<List<ListUsers>>> = MutableLiveData()
 
-    fun getListUsers() {
+    fun getListUsersData() {
         viewModelScope.launch{
-            val responseListUsers = repository.getListUsers()
-            myResponseListUsers.value = responseListUsers
+            val responseListUsers = repository.getListUsersData()
+            myResponseListUsersData.value = responseListUsers
         }
     }
 
-    fun getUserDetailsData(name: String) {
+    fun getSearchResult(username: String) {
+        viewModelScope.launch {
+            val responseSearchResult = repository.getSearchResult(username)
+            myResponseSearchResult.value = responseSearchResult
+        }
+    }
+
+    fun getUserDetailsData(username: String) {
         viewModelScope.launch{
-            val responseUserDetailsData = repository.getUserDetailsData(name)
+            val responseUserDetailsData = repository.getUserDetailsData(username)
             myResponseUserDetailsData?.value = responseUserDetailsData
         }
     }

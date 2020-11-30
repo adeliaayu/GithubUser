@@ -4,9 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.dicoding.kotlin.githubuser.data.ListUsers
 import kotlinx.android.synthetic.main.item_user.view.*
 
-class UserAdapter(private val listUser : ArrayList<User>) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+class UserAdapter(private var listUser : ArrayList<ListUsers>) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     private var onItemClickCallback: OnItemClickCallback? = null
 
@@ -26,10 +28,9 @@ class UserAdapter(private val listUser : ArrayList<User>) : RecyclerView.Adapter
     override fun getItemCount(): Int = listUser.size
 
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(user: User) {
+        fun bind(user: ListUsers) {
             with(itemView) {
-                itemUser_img_avatar.setImageResource(user.avatar)
-                itemUser_txt_name.text = user.name
+                Glide.with(context).load(user.avatar).into(itemUser_img_avatar)
                 itemUser_txt_username.text = user.username
 
                 itemView.setOnClickListener { onItemClickCallback?.onItemClicked(user) }
@@ -38,6 +39,6 @@ class UserAdapter(private val listUser : ArrayList<User>) : RecyclerView.Adapter
     }
 
     interface OnItemClickCallback {
-        fun onItemClicked(data: User)
+        fun onItemClicked(data: ListUsers)
     }
 }
