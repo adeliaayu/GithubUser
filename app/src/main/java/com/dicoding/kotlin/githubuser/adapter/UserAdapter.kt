@@ -1,10 +1,11 @@
-package com.dicoding.kotlin.githubuser
+package com.dicoding.kotlin.githubuser.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.dicoding.kotlin.githubuser.R
 import com.dicoding.kotlin.githubuser.data.ListUsers
 import kotlinx.android.synthetic.main.item_user.view.*
 
