@@ -4,17 +4,25 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.dicoding.kotlin.githubuser.adapter.SectionsPagerAdapter
 import com.dicoding.kotlin.githubuser.data.ListUsers
 import com.dicoding.kotlin.githubuser.data.User
 import com.dicoding.kotlin.githubuser.repository.Repository
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_detail_user.*
 
 class DetailUser : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
+
+    @StringRes
+    private val TAB_TITLES = intArrayOf(
+        R.string.followers,
+        R.string.following)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +54,12 @@ class DetailUser : AppCompatActivity() {
             }
         })
 
+        val sectionsPagerAdapter = SectionsPagerAdapter(this)
+        detailUser_viewPager.adapter = sectionsPagerAdapter
+        TabLayoutMediator(detailUser_tabs, detailUser_viewPager) { tab, position ->
+            tab.text = resources.getString(TAB_TITLES[position])
+        }.attach()
+
         supportActionBar?.setTitle("User Detail")
     }
 
@@ -58,6 +72,8 @@ class DetailUser : AppCompatActivity() {
         detailUser_txt_location.visibility = View.VISIBLE
         detailUser_ll_repository.visibility = View.VISIBLE
         detailUser_ll_follow.visibility = View.VISIBLE
+        detailUser_tabs.visibility = View.VISIBLE
+        detailUser_viewPager.visibility = View.VISIBLE
     }
 
     companion object {
