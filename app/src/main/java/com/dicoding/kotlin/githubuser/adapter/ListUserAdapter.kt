@@ -9,7 +9,7 @@ import com.dicoding.kotlin.githubuser.R
 import com.dicoding.kotlin.githubuser.data.ListUsers
 import kotlinx.android.synthetic.main.item_user.view.*
 
-class UserAdapter(private var listUser : ArrayList<ListUsers>) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+class ListUserAdapter(private var listUser : ArrayList<ListUsers>) : RecyclerView.Adapter<ListUserAdapter.UserViewHolder>() {
 
     private var onItemClickCallback: OnItemClickCallback? = null
 

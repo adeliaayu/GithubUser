@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.dicoding.kotlin.githubuser.adapter.UserAdapter
+import com.dicoding.kotlin.githubuser.adapter.ListUserAdapter
 import com.dicoding.kotlin.githubuser.data.ListUsers
 import com.dicoding.kotlin.githubuser.data.SearchedUsers
 import com.dicoding.kotlin.githubuser.model.ListUsersData
@@ -98,10 +98,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun showRecyclerList() {
         rv_users.layoutManager = LinearLayoutManager(this)
-        val userAdapter = UserAdapter(list)
+        val userAdapter = ListUserAdapter(list)
         rv_users.adapter = userAdapter
 
-        userAdapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
+        userAdapter.setOnItemClickCallback(object : ListUserAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ListUsers) {
                 val moveToDetailUser = Intent(this@MainActivity, DetailUser::class.java)
                 moveToDetailUser.putExtra(DetailUser.EXTRA_USER, data)

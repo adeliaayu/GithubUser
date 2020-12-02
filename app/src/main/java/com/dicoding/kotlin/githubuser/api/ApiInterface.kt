@@ -22,4 +22,15 @@ interface ApiInterface {
     suspend fun getUserDetailsData(
         @Path("username") name: String
     ): Response<UserDetailsData>
+
+    @GET("/users/{username}/followers")
+    suspend fun getFollowersList(
+        @Path("username") name: String
+    ): Response<List<ListUsersData>>
+
+    @GET("/users/{username}/following")
+    suspend fun getFollowingList(
+        @Path("username") name: String
+    ): Response<List<ListUsersData>>
+
 }

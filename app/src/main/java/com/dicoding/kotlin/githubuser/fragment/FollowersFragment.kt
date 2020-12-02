@@ -18,9 +18,9 @@ import com.dicoding.kotlin.githubuser.adapter.ListUserAdapter
 import com.dicoding.kotlin.githubuser.data.ListUsers
 import com.dicoding.kotlin.githubuser.model.ListUsersData
 import com.dicoding.kotlin.githubuser.repository.Repository
-import kotlinx.android.synthetic.main.fragment_following.*
+import kotlinx.android.synthetic.main.fragment_followers.*
 
-class FollowingFragment : Fragment() {
+class FollowersFragment : Fragment() {
 
     private var list = ArrayList<ListUsers>()
     private lateinit var viewModel: MainViewModel
@@ -32,7 +32,7 @@ class FollowingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         username = arguments?.getString(ARG_USERNAME)
-        return inflater.inflate(R.layout.fragment_following, container, false)
+        return inflater.inflate(R.layout.fragment_followers, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,8 +42,8 @@ class FollowingFragment : Fragment() {
         val viewModelFactory = MainViewModelFactory(repository)
 
         viewModel = ViewModelProvider(activity!!.viewModelStore, viewModelFactory).get(MainViewModel::class.java)
-        username?.let { viewModel.getFollowingList(it) }
-        viewModel.myResponseFollowingList.observe(viewLifecycleOwner, Observer { response ->
+        username?.let { viewModel.getFollowersList(it) }
+        viewModel.myResponseFollowersList.observe(viewLifecycleOwner, Observer { response ->
             if (response.isSuccessful) {
                 Toast.makeText(activity, "Success", Toast.LENGTH_SHORT).show()
                 response.body()?.let {
@@ -67,11 +67,11 @@ class FollowingFragment : Fragment() {
     }
 
     private fun showRecyclerList() {
-        rv_following.layoutManager = LinearLayoutManager(activity)
-        val listFollowingAdapter = ListUserAdapter(list)
-        rv_following.adapter = listFollowingAdapter
+        rv_followers.layoutManager = LinearLayoutManager(activity)
+        val listFollowersAdapter = ListUserAdapter(list)
+        rv_followers.adapter = listFollowersAdapter
 
-        listFollowingAdapter.setOnItemClickCallback(object : ListUserAdapter.OnItemClickCallback {
+        listFollowersAdapter.setOnItemClickCallback(object : ListUserAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ListUsers) {
                 val moveToDetailUser = Intent(activity, DetailUser::class.java)
                 moveToDetailUser.putExtra(DetailUser.EXTRA_USER, data)
@@ -80,11 +80,13 @@ class FollowingFragment : Fragment() {
         })
     }
 
+
     companion object {
+
         private val ARG_USERNAME = "username"
 
-        fun newInstance(username: String) : FollowingFragment {
-            val fragment = FollowingFragment()
+        fun newInstance(username: String) : FollowersFragment {
+            val fragment = FollowersFragment()
             val bundle = Bundle()
             bundle.putString(ARG_USERNAME, username)
             fragment.arguments = bundle

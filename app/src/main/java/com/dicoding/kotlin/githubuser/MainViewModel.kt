@@ -15,6 +15,8 @@ class MainViewModel(private val repository: Repository): ViewModel() {
     val myResponseListUsersData: MutableLiveData<Response<List<ListUsersData>>> = MutableLiveData()
     val myResponseSearchResult: MutableLiveData<Response<SearchedUsers>> = MutableLiveData()
     val myResponseUserDetailsData: MutableLiveData<Response<UserDetailsData>>? = MutableLiveData()
+    val myResponseFollowersList: MutableLiveData<Response<List<ListUsersData>>> = MutableLiveData()
+    val myResponseFollowingList: MutableLiveData<Response<List<ListUsersData>>> = MutableLiveData()
 
     fun getListUsersData() {
         viewModelScope.launch{
@@ -34,6 +36,20 @@ class MainViewModel(private val repository: Repository): ViewModel() {
         viewModelScope.launch{
             val responseUserDetailsData = repository.getUserDetailsData(username)
             myResponseUserDetailsData?.value = responseUserDetailsData
+        }
+    }
+
+    fun getFollowersList(username: String) {
+        viewModelScope.launch{
+            val responseFollowersList = repository.getFollowersList(username)
+            myResponseFollowersList.value = responseFollowersList
+        }
+    }
+
+    fun getFollowingList(username: String) {
+        viewModelScope.launch{
+            val responseFollowingList = repository.getFollowingList(username)
+            myResponseFollowingList.value = responseFollowingList
         }
     }
 

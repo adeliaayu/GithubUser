@@ -19,4 +19,12 @@ class Repository {
     suspend fun getUserDetailsData(name: String): Response<UserDetailsData> {
         return RetrofitInstace.api.getUserDetailsData(name)
     }
+
+    suspend fun getFollowersList(username: String): Response<List<ListUsersData>> {
+        return RetrofitInstace.api.getFollowersList(username)
+    }
+
+    suspend fun getFollowingList(username: String): Response<List<ListUsersData>> {
+        return RetrofitInstace.api.getFollowingList(username)
+    }
 }
