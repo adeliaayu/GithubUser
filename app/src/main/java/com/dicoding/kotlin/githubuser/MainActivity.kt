@@ -1,6 +1,10 @@
 package com.dicoding.kotlin.githubuser
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -14,6 +18,7 @@ import com.dicoding.kotlin.githubuser.data.ListUsers
 import com.dicoding.kotlin.githubuser.data.SearchedUsers
 import com.dicoding.kotlin.githubuser.model.ListUsersData
 import com.dicoding.kotlin.githubuser.repository.Repository
+import kotlinx.android.synthetic.main.activity_detail_user.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -32,37 +37,49 @@ class MainActivity : AppCompatActivity() {
         val viewModelFactory = MainViewModelFactory(repository)
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
-        viewModel.getListUsersData()
-        viewModel.myResponseListUsersData.observe(this, Observer { response ->
-            if (response.isSuccessful) {
-                response.body()?.let {
-                    setData(it)
-                    showRecyclerList()
-                    main_progressBar.visibility = View.INVISIBLE
-                    rv_users.visibility = View.VISIBLE
+        if (isInternetAvailable(this)){
+            viewModel.getListUsersData()
+            viewModel.myResponseListUsersData.observe(this, Observer { response ->
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        setData(it)
+                        showRecyclerList()
+                        main_progressBar.visibility = View.INVISIBLE
+                        rv_users.visibility = View.VISIBLE
+                    }
+                } else {
+                    Toast.makeText(this, "Failed Connection", Toast.LENGTH_SHORT).show()
                 }
-            }
-        })
+            })
+        } else {
+            main_progressBar.visibility = View.INVISIBLE
+            Toast.makeText(this, "No Connection", Toast.LENGTH_LONG).show()
+        }
 
         main_searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 main_progressBar.visibility = View.VISIBLE
                 rv_users.visibility = View.INVISIBLE
-                viewModel.getSearchResult(query)
-                viewModel.myResponseSearchResult.observe(this@MainActivity, Observer { response ->
-                    if (response.isSuccessful) {
-                        response.body()?.let {
-                            list.clear()
-                            setDataSearchUsers(it)
-                            showRecyclerList()
-                            main_progressBar.visibility = View.INVISIBLE
-                            rv_users.visibility = View.VISIBLE
-                            if (list.isEmpty()) Toast.makeText(this@MainActivity, "No Match Found", Toast.LENGTH_SHORT).show()
+                if (isInternetAvailable(this@MainActivity)){
+                    viewModel.getSearchResult(query)
+                    viewModel.myResponseSearchResult.observe(this@MainActivity, Observer { response ->
+                        if (response.isSuccessful) {
+                            response.body()?.let {
+                                list.clear()
+                                setDataSearchUsers(it)
+                                showRecyclerList()
+                                main_progressBar.visibility = View.INVISIBLE
+                                rv_users.visibility = View.VISIBLE
+                                if (list.isEmpty()) Toast.makeText(this@MainActivity, "No Match Found", Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
+                            Toast.makeText(this@MainActivity, "Connection Failed", Toast.LENGTH_SHORT).show()
                         }
-                    } else {
-                        Toast.makeText(this@MainActivity, "Connection Failed", Toast.LENGTH_SHORT).show()
-                    }
-                })
+                    })
+                }  else {
+                    main_progressBar.visibility = View.INVISIBLE
+                    Toast.makeText(this@MainActivity, "No Connection", Toast.LENGTH_LONG).show()
+                }
                 return false
             }
 
@@ -108,6 +125,34 @@ class MainActivity : AppCompatActivity() {
                 startActivity(moveToDetailUser)
             }
         })
+    }
+
+    private fun isInternetAvailable(context: Context): Boolean {
+        var result = false
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val networkCapabilities = connectivityManager.activeNetwork ?: return false
+            val actNw =
+                connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
+            result = when {
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                else -> false
+            }
+        } else {
+            connectivityManager.activeNetworkInfo?.run {
+                result = when (type) {
+                    ConnectivityManager.TYPE_WIFI -> true
+                    ConnectivityManager.TYPE_MOBILE -> true
+                    ConnectivityManager.TYPE_ETHERNET -> true
+                    else -> false
+                }
+
+            }
+        }
+        return result
     }
 
 }

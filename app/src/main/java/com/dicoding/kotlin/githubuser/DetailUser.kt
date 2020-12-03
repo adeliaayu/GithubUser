@@ -1,5 +1,9 @@
 package com.dicoding.kotlin.githubuser
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -34,25 +38,30 @@ class DetailUser : AppCompatActivity() {
         val viewModelFactory = MainViewModelFactory(repository)
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
-        viewModel.getUserDetailsData(userDetails.username)
-        viewModel.myResponseUserDetailsData?.observe(this, Observer { response ->
-            if (response.isSuccessful) {
-                response.body()?.let {
-                    Glide.with(this).load(response.body()?.avatar).into(detailUser_img_avatar)
-                    detailUser_txt_name.text = response.body()?.name
-                    detailUser_txt_username.text = response.body()?.username
-                    detailUser_txt_company.text = response.body()?.company
-                    detailUser_txt_location.text = response.body()?.location
-                    detailUser_txt_repository.text = response.body()?.repository.toString()
-                    detailUser_txt_follower.text = response.body()?.followers.toString()
-                    detailUser_txt_following.text = response.body()?.following.toString()
+        if (isInternetAvailable(this)){
+            viewModel.getUserDetailsData(userDetails.username)
+            viewModel.myResponseUserDetailsData?.observe(this, Observer { response ->
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        Glide.with(this).load(response.body()?.avatar).into(detailUser_img_avatar)
+                        detailUser_txt_name.text = response.body()?.name
+                        detailUser_txt_username.text = response.body()?.username
+                        detailUser_txt_company.text = response.body()?.company
+                        detailUser_txt_location.text = response.body()?.location
+                        detailUser_txt_repository.text = response.body()?.repository.toString()
+                        detailUser_txt_follower.text = response.body()?.followers.toString()
+                        detailUser_txt_following.text = response.body()?.following.toString()
+                    }
+                    setVisible()
+                } else {
+                    detailUser_progressBar.visibility = View.INVISIBLE
+                    Toast.makeText(this, response.errorBody().toString(), Toast.LENGTH_SHORT).show()
                 }
-                setVisible()
-            } else {
-                detailUser_progressBar.visibility = View.INVISIBLE
-                Toast.makeText(this, response.errorBody().toString(), Toast.LENGTH_SHORT).show()
-            }
-        })
+            })
+        } else {
+            detailUser_progressBar.visibility = View.INVISIBLE
+            Toast.makeText(this, "No Connection", Toast.LENGTH_LONG).show()
+        }
 
         val sectionsPagerAdapter = SectionsPagerAdapter(this)
         sectionsPagerAdapter.username = userDetails.username
@@ -75,6 +84,34 @@ class DetailUser : AppCompatActivity() {
         detailUser_ll_follow.visibility = View.VISIBLE
         detailUser_tabs.visibility = View.VISIBLE
         detailUser_viewPager.visibility = View.VISIBLE
+    }
+
+    private fun isInternetAvailable(context: Context): Boolean {
+        var result = false
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val networkCapabilities = connectivityManager.activeNetwork ?: return false
+            val actNw =
+                connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
+            result = when {
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                else -> false
+            }
+        } else {
+            connectivityManager.activeNetworkInfo?.run {
+                result = when (type) {
+                    ConnectivityManager.TYPE_WIFI -> true
+                    ConnectivityManager.TYPE_MOBILE -> true
+                    ConnectivityManager.TYPE_ETHERNET -> true
+                    else -> false
+                }
+
+            }
+        }
+        return result
     }
 
     companion object {
