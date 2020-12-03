@@ -20,6 +20,9 @@ import com.dicoding.kotlin.githubuser.model.ListUsersData
 import com.dicoding.kotlin.githubuser.repository.Repository
 import kotlinx.android.synthetic.main.activity_detail_user.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         val viewModelFactory = MainViewModelFactory(repository)
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
-        if (isInternetAvailable(this)){
+        if (isInternetAvailable(this)) {
             viewModel.getListUsersData()
             viewModel.myResponseListUsersData.observe(this, Observer { response ->
                 if (response.isSuccessful) {
@@ -56,27 +59,36 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "No Connection", Toast.LENGTH_LONG).show()
         }
 
-        main_searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+        main_searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                main_progressBar.visibility = View.VISIBLE
-                rv_users.visibility = View.INVISIBLE
-                if (isInternetAvailable(this@MainActivity)){
+                setLoading()
+                if (isInternetAvailable(this@MainActivity)) {
                     viewModel.getSearchResult(query)
-                    viewModel.myResponseSearchResult.observe(this@MainActivity, Observer { response ->
-                        if (response.isSuccessful) {
-                            response.body()?.let {
-                                list.clear()
-                                setDataSearchUsers(it)
-                                showRecyclerList()
-                                main_progressBar.visibility = View.INVISIBLE
-                                rv_users.visibility = View.VISIBLE
-                                if (list.isEmpty()) Toast.makeText(this@MainActivity, "No Match Found", Toast.LENGTH_SHORT).show()
+                    viewModel.myResponseSearchResult.observe(
+                        this@MainActivity,
+                        Observer { response ->
+                            if (response.isSuccessful) {
+                                response.body()?.let {
+                                    list.clear()
+                                    setDataSearchUsers(it)
+                                    showRecyclerList()
+                                    main_progressBar.visibility = View.INVISIBLE
+                                    rv_users.visibility = View.VISIBLE
+                                    if (list.isEmpty()) Toast.makeText(
+                                        this@MainActivity,
+                                        "No Match Found",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            } else {
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    "Connection Failed",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
-                        } else {
-                            Toast.makeText(this@MainActivity, "Connection Failed", Toast.LENGTH_SHORT).show()
-                        }
-                    })
-                }  else {
+                        })
+                } else {
                     main_progressBar.visibility = View.INVISIBLE
                     Toast.makeText(this@MainActivity, "No Connection", Toast.LENGTH_LONG).show()
                 }
@@ -87,6 +99,16 @@ class MainActivity : AppCompatActivity() {
                 return false
             }
         })
+    }
+
+    private fun setLoading() {
+        CoroutineScope(Dispatchers.IO).launch {
+            delay(10)
+            withContext(Dispatchers.Main) {
+                main_progressBar.visibility = View.VISIBLE
+                rv_users.visibility = View.INVISIBLE
+            }
+        }
     }
 
     private fun setDataSearchUsers(newList: SearchedUsers) {
