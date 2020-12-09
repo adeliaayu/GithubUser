@@ -25,6 +25,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            buildConfigField "String", "GITHUB_TOKEN", '"b650046bf640e7bf7054093854b8d02a"'
+        }
     }
 
     compileOptions {

@@ -46,10 +46,12 @@ class FollowersFragment : Fragment() {
         val repository = Repository()
         val viewModelFactory = MainViewModelFactory(repository)
 
-        viewModel = ViewModelProvider(
-            activity!!.viewModelStore,
-            viewModelFactory
-        ).get(MainViewModel::class.java)
+        activity?.viewModelStore?.let { it ->
+            viewModel = ViewModelProvider(
+                it,
+                viewModelFactory
+            ).get(MainViewModel::class.java)
+        }
         if (context?.let { isInternetAvailable(it) } == true) {
             username?.let { viewModel.getFollowersList(it) }
             viewModel.myResponseFollowersList.observe(viewLifecycleOwner, Observer { response ->
