@@ -17,6 +17,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+        buildConfigField("String", "GITHUB_TOKEN", '"token f935652ba69c7d793d09507edd7b70be887c1453"')
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -27,7 +28,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            buildConfigField "String", "GITHUB_TOKEN", '"b650046bf640e7bf7054093854b8d02a"'
+            buildConfigField "String", "GITHUB_TOKEN", '"token f935652ba69c7d793d09507edd7b70be887c1453"'
         }
     }
 
