@@ -13,5 +13,6 @@
     <string name="search_hint">Find user</string>
     <string name="content_tab_followers">List Followers</string>
     <string name="content_tab_following">List Following</string>
+    <string name="favorite">Favorite</string>
 
 </resources>

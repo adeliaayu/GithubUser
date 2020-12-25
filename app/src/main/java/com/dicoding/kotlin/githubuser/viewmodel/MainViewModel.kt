@@ -1,4 +1,4 @@
-package com.dicoding.kotlin.githubuser
+package com.dicoding.kotlin.githubuser.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

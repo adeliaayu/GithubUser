@@ -9,24 +9,34 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.dicoding.kotlin.githubuser.adapter.SectionsPagerAdapter
 import com.dicoding.kotlin.githubuser.data.ListUsers
 import com.dicoding.kotlin.githubuser.data.User
+import com.dicoding.kotlin.githubuser.model.LikedUser
+import com.dicoding.kotlin.githubuser.model.UserDetailsData
+import com.dicoding.kotlin.githubuser.repository.LikedUserRepository
 import com.dicoding.kotlin.githubuser.repository.Repository
+import com.dicoding.kotlin.githubuser.viewmodel.LikedUserViewModel
+import com.dicoding.kotlin.githubuser.viewmodel.MainViewModel
+import com.dicoding.kotlin.githubuser.viewmodel.MainViewModelFactory
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_detail_user.*
 
 class DetailUser : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
+    private lateinit var likedViewModel: LikedUserViewModel
+    private var likedUser: UserDetailsData? = null
 
     @StringRes
     private val TAB_TITLES = intArrayOf(
         R.string.followers,
-        R.string.following)
+        R.string.following
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +48,7 @@ class DetailUser : AppCompatActivity() {
         val viewModelFactory = MainViewModelFactory(repository)
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
-        if (isInternetAvailable(this)){
+        if (isInternetAvailable(this)) {
             viewModel.getUserDetailsData(userDetails.username)
             viewModel.myResponseUserDetailsData?.observe(this, Observer { response ->
                 if (response.isSuccessful) {
@@ -52,6 +62,7 @@ class DetailUser : AppCompatActivity() {
                         detailUser_txt_follower.text = response.body()?.followers.toString()
                         detailUser_txt_following.text = response.body()?.following.toString()
                     }
+                    likedUser = response.body()
                     setVisible()
                 } else {
                     detailUser_progressBar.visibility = View.INVISIBLE
@@ -71,6 +82,47 @@ class DetailUser : AppCompatActivity() {
         }.attach()
 
         supportActionBar?.setTitle("User Detail")
+
+        likedViewModel = ViewModelProvider(this ).get(LikedUserViewModel::class.java)
+
+        var statusFav = false
+        setStatusFavorite(statusFav)
+        detailUser_fab.setOnClickListener {
+            statusFav = !statusFav
+            insertLikedUserToDatabase()
+            setStatusFavorite(statusFav)
+        }
+    }
+
+    private fun insertLikedUserToDatabase() {
+        val insertLiked = likedUser?.let {
+            LikedUser(
+                0,
+                it.username,
+                it.avatar
+            )
+        }
+
+        insertLiked?.let { likedViewModel.addUser(it) }
+        Toast.makeText(this, "Favorite!", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun setStatusFavorite(statusFav: Boolean) {
+        if (statusFav) {
+            detailUser_fab.setImageDrawable(
+                ContextCompat.getDrawable(
+                    getApplicationContext(),
+                    R.drawable.ic_favorite_24
+                )
+            )
+        } else {
+            detailUser_fab.setImageDrawable(
+                ContextCompat.getDrawable(
+                    getApplicationContext(),
+                    R.drawable.ic_favorite_border_24
+                )
+            );
+        }
     }
 
     private fun setVisible() {
@@ -84,6 +136,7 @@ class DetailUser : AppCompatActivity() {
         detailUser_ll_follow.visibility = View.VISIBLE
         detailUser_tabs.visibility = View.VISIBLE
         detailUser_viewPager.visibility = View.VISIBLE
+        detailUser_fab.visibility = View.VISIBLE
     }
 
     private fun isInternetAvailable(context: Context): Boolean {

@@ -18,6 +18,8 @@ import com.dicoding.kotlin.githubuser.data.ListUsers
 import com.dicoding.kotlin.githubuser.data.SearchedUsers
 import com.dicoding.kotlin.githubuser.model.ListUsersData
 import com.dicoding.kotlin.githubuser.repository.Repository
+import com.dicoding.kotlin.githubuser.viewmodel.MainViewModel
+import com.dicoding.kotlin.githubuser.viewmodel.MainViewModelFactory
 import kotlinx.android.synthetic.main.activity_detail_user.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*

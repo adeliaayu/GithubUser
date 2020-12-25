@@ -15,8 +15,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.kotlin.githubuser.DetailUser
-import com.dicoding.kotlin.githubuser.MainViewModel
-import com.dicoding.kotlin.githubuser.MainViewModelFactory
+import com.dicoding.kotlin.githubuser.viewmodel.MainViewModel
+import com.dicoding.kotlin.githubuser.viewmodel.MainViewModelFactory
 import com.dicoding.kotlin.githubuser.R
 import com.dicoding.kotlin.githubuser.adapter.ListUserAdapter
 import com.dicoding.kotlin.githubuser.data.ListUsers
