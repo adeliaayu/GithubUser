@@ -11,12 +11,15 @@ interface LikedUserDao {
     suspend fun addUser(likedUser: LikedUser)
 
     @Delete
-    suspend fun deleteUser(likedUser: LikedUser)
+    suspend fun deleteUser1(likedUser: LikedUser)
 
     @Query("SELECT * FROM user_table ORDER BY id ASC")
     fun readAllData(): LiveData<List<LikedUser>>
 
     @Query("DELETE FROM user_table")
     suspend fun deleteAllUsers()
+
+    @Query("DELETE FROM user_table WHERE username LIKE :username")
+    suspend fun deleteUser(username: String)
 
 }

@@ -12,12 +12,16 @@ class LikedUserRepository(private val likedUserDao: LikedUserDao) {
         likedUserDao.addUser(likedUser)
     }
 
-    suspend fun deleteUser(likedUser: LikedUser){
-        likedUserDao.deleteUser(likedUser)
+    suspend fun deleteUser1(likedUser: LikedUser){
+        likedUserDao.deleteUser1(likedUser)
     }
 
     suspend fun deleteAllUsers(){
         likedUserDao.deleteAllUsers()
+    }
+
+    suspend fun deleteUser(username: String){
+        likedUserDao.deleteUser(username)
     }
 
 }

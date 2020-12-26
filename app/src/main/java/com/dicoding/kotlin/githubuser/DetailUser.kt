@@ -89,9 +89,19 @@ class DetailUser : AppCompatActivity() {
         setStatusFavorite(statusFav)
         detailUser_fab.setOnClickListener {
             statusFav = !statusFav
-            insertLikedUserToDatabase()
+            if (statusFav) {
+                insertLikedUserToDatabase()
+            } else {
+                deleteLikedUserInDatabase()
+            }
             setStatusFavorite(statusFav)
         }
+    }
+
+    private fun deleteLikedUserInDatabase() {
+        likedUser?.let { likedViewModel.deleteUser(it.username) }
+
+        Toast.makeText(this, "Removed From Favorite", Toast.LENGTH_SHORT).show()
     }
 
     private fun insertLikedUserToDatabase() {

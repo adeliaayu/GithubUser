@@ -27,9 +27,9 @@ class LikedUserViewModel(application: Application): AndroidViewModel(application
         }
     }
 
-    fun deleteUser(likedUser: LikedUser){
+    fun deleteUser1(likedUser: LikedUser){
         viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteUser(likedUser)
+            repository.deleteUser1(likedUser)
         }
     }
 
@@ -39,4 +39,9 @@ class LikedUserViewModel(application: Application): AndroidViewModel(application
         }
     }
 
+    fun deleteUser(username: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteUser(username)
+        }
+    }
 }
