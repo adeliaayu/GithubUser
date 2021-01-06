@@ -14,7 +14,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.dicoding.kotlin.githubuser.DetailUser
+import com.dicoding.kotlin.githubuser.activity.DetailUser
 import com.dicoding.kotlin.githubuser.viewmodel.MainViewModel
 import com.dicoding.kotlin.githubuser.viewmodel.MainViewModelFactory
 import com.dicoding.kotlin.githubuser.R

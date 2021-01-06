@@ -1,7 +1,7 @@
 package com.dicoding.kotlin.githubuser.repository
 
 import androidx.lifecycle.LiveData
-import com.dicoding.kotlin.githubuser.data.LikedUserDao
+import com.dicoding.kotlin.githubuser.database.LikedUserDao
 import com.dicoding.kotlin.githubuser.model.LikedUser
 
 class LikedUserRepository(private val likedUserDao: LikedUserDao) {

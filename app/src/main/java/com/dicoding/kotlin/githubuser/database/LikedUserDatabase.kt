@@ -1,4 +1,4 @@
-package com.dicoding.kotlin.githubuser.data
+package com.dicoding.kotlin.githubuser.database
 
 import android.content.Context
 import androidx.room.Database

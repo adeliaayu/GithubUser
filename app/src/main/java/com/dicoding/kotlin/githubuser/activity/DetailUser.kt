@@ -1,4 +1,4 @@
-package com.dicoding.kotlin.githubuser
+package com.dicoding.kotlin.githubuser.activity
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -13,12 +13,12 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.dicoding.kotlin.githubuser.R
 import com.dicoding.kotlin.githubuser.adapter.SectionsPagerAdapter
 import com.dicoding.kotlin.githubuser.data.ListUsers
 import com.dicoding.kotlin.githubuser.data.User
 import com.dicoding.kotlin.githubuser.model.LikedUser
 import com.dicoding.kotlin.githubuser.model.UserDetailsData
-import com.dicoding.kotlin.githubuser.repository.LikedUserRepository
 import com.dicoding.kotlin.githubuser.repository.Repository
 import com.dicoding.kotlin.githubuser.viewmodel.LikedUserViewModel
 import com.dicoding.kotlin.githubuser.viewmodel.MainViewModel

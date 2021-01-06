@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.dicoding.kotlin.githubuser.data.LikedUserDatabase
+import com.dicoding.kotlin.githubuser.database.LikedUserDatabase
 import com.dicoding.kotlin.githubuser.model.LikedUser
 import com.dicoding.kotlin.githubuser.repository.LikedUserRepository
 import kotlinx.coroutines.Dispatchers

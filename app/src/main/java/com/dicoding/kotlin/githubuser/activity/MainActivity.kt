@@ -1,4 +1,4 @@
-package com.dicoding.kotlin.githubuser
+package com.dicoding.kotlin.githubuser.activity
 
 import android.content.Context
 import android.content.Intent
@@ -15,9 +15,11 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dicoding.kotlin.githubuser.R
 import com.dicoding.kotlin.githubuser.adapter.ListUserAdapter
 import com.dicoding.kotlin.githubuser.data.ListUsers
 import com.dicoding.kotlin.githubuser.data.SearchedUsers
+import com.dicoding.kotlin.githubuser.fragment.SettingPreferencesFragment
 import com.dicoding.kotlin.githubuser.model.ListUsersData
 import com.dicoding.kotlin.githubuser.repository.Repository
 import com.dicoding.kotlin.githubuser.viewmodel.MainViewModel
@@ -115,6 +117,11 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.favorite -> {
                 val intent = Intent(this, FavoriteUser::class.java)
+                startActivity(intent)
+                return true
+            }
+            R.id.setting -> {
+                val intent = Intent(this, SettingActivity::class.java)
                 startActivity(intent)
                 return true
             }

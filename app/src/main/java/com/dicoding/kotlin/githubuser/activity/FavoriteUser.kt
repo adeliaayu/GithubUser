@@ -1,13 +1,13 @@
-package com.dicoding.kotlin.githubuser
+package com.dicoding.kotlin.githubuser.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dicoding.kotlin.githubuser.R
+import com.dicoding.kotlin.githubuser.activity.DetailUser
 import com.dicoding.kotlin.githubuser.adapter.LikedUserAdapter
 import com.dicoding.kotlin.githubuser.data.ListUsers
 import com.dicoding.kotlin.githubuser.model.LikedUser
