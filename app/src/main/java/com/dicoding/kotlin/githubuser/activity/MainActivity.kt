@@ -19,7 +19,6 @@ import com.dicoding.kotlin.githubuser.R
 import com.dicoding.kotlin.githubuser.adapter.ListUserAdapter
 import com.dicoding.kotlin.githubuser.data.ListUsers
 import com.dicoding.kotlin.githubuser.data.SearchedUsers
-import com.dicoding.kotlin.githubuser.fragment.SettingPreferencesFragment
 import com.dicoding.kotlin.githubuser.model.ListUsersData
 import com.dicoding.kotlin.githubuser.repository.Repository
 import com.dicoding.kotlin.githubuser.viewmodel.MainViewModel

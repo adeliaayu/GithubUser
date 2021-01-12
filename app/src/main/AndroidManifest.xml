@@ -12,7 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.SettingActivity"></activity>
+        <receiver
+            android:name=".utils.ReminderReciever"
+            android:enabled="true"
+            android:exported="true"/>
+        <activity android:name=".activity.SettingActivity"/>
         <activity android:name=".activity.FavoriteUser" />
         <activity android:name=".activity.DetailUser" />
         <activity android:name=".activity.MainActivity">
